@@ -1,0 +1,52 @@
+ESP8266开发环境搭建--基于Ubuntu16.04/12.04
+
+1.先执行更新
+sudo apt-get update
+
+2.参考地址https://github.com/espressif/ESP8266_RTOS_SDK
+    下载对应的编译链工具xtensa-lx106-elf-linux64-1.22.0-92-g8facf4c-5.2.0.tar.gz
+xtensa-lx106-elf-linux64-1.22.0-92-g8facf4c-5.2.0.tar.gz
+35.33MB
+    把该文件放到共享文件夹
+
+3.为了方便进入共享文件夹，创建一个软链接
+ sudo ln -s /mnt/hgfs/share/ ~
+
+4.修改opt文件夹的用户权限
+sudo chmod 777 /opt
+
+5.解压上面下载的工具链到/opt文件夹
+tar -zxvf share/xtensa-lx106-elf-linux64-1.22.0-92-g8facf4c-5.2.0.tar.gz -C /opt
+
+6.添加环境变量
+sudo gedit ~/.profile
+    添加如下内容到.profile文件最后一行
+PATH="/opt/xtensa-lx106-elf/bin:$PATH"
+source ~/.profile #使环境变量生效
+
+7.在用户目录创建esp文件夹，并修改文件夹权限
+cd ~
+mkdir esp
+sudo chmod 777 esp
+
+8.安装git，并将sdk拉取到esp文件夹
+sudo apt-get install git
+cd esp
+git clone --recursive https://github.com/espressif/ESP8266_RTOS_SDK.git
+
+9.Ubuntu16.04默认安装了python，安装其他相关库如下
+sudo apt-get install gcc git wget make libncurses-dev flex bison gperf python python-serial
+
+    在工程目录下的Makefile下添加
+IDF_PATH = ~/esp/ESP8266_RTOS_SDK
+    
+11.编译
+make
+    然后会弹出菜单对话框，可以直接退出继续进行编译
+
+12.提示工具版本低，更新一下
+ python -m pip install --user -r ~/esp/ESP8266_RTOS_SDK/requirements.txt
+    
+13.再编译一下
+make
+爽歪歪，通过编译了
